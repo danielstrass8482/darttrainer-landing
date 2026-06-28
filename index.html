@@ -243,8 +243,8 @@
       <span style="font-weight:800; font-size:16px;">DartTrainer</span>
     </div>
     <div style="display:flex; gap:26px;">
-      <a class="foot-link" href="https://darttrainer.app/privacy.html" data-i18n="footPrivacy">Datenschutzerklärung</a>
-      <a class="foot-link" href="https://darttrainer.app/impressum.html" data-i18n="footImprint">Impressum</a>
+      <a class="foot-link" id="link-privacy" href="privacy.html" data-i18n="footPrivacy">Datenschutzerklärung</a>
+      <a class="foot-link" id="link-imprint" href="impressum.html" data-i18n="footImprint">Impressum</a>
     </div>
   </div>
   <div class="wrap" style="padding:0 28px 40px; display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-between;">
@@ -306,19 +306,25 @@
   };
 
   function setLang(lang){
-    if(!I18N[lang]) return;
-    document.documentElement.lang = lang;
-    var dict = I18N[lang];
-    document.querySelectorAll('[data-i18n]').forEach(function(el){
-      var k = el.getAttribute('data-i18n');
-      if(dict[k] !== undefined) el.textContent = dict[k];
-    });
-    document.querySelectorAll('.lang-btn').forEach(function(b){
-      var on = b.getAttribute('data-lang') === lang;
-      b.classList.toggle('active', on);
-      b.setAttribute('aria-pressed', on ? 'true' : 'false');
-    });
-    try{ localStorage.setItem('dt_lang', lang); }catch(e){}
+  if(!I18N[lang]) return;
+  document.documentElement.lang = lang;
+  var dict = I18N[lang];
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n');
+    if(dict[k] !== undefined) el.textContent = dict[k];
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(b){
+    var on = b.getAttribute('data-lang') === lang;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  // Links je nach Sprache umschalten
+  var privacyLink = document.getElementById('link-privacy');
+  var imprintLink = document.getElementById('link-imprint');
+  if(privacyLink) privacyLink.href = lang === 'en' ? 'privacy-en.html' : 'privacy.html';
+  if(imprintLink) imprintLink.href = lang === 'en' ? 'impressum.html' : 'impressum.html';
+  try{ localStorage.setItem('dt_lang', lang); }catch(e){}
+}
   }
 
   (function(){
